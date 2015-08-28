@@ -11,7 +11,7 @@ namespace ListControl.Extension
 {
     internal static class ListControlUtil
     {
-        public static MvcHtmlString GenerateHtml(string name, List<SelectListItem> items, ControlType controlType, object stateValue,string cssClass,bool disabled)
+         public static MvcHtmlString GenerateHtml(string name, List<SelectListItem> items, ControlType controlType, object stateValue,string cssClass,bool disabled)
         {
             TagBuilder container = new TagBuilder("div");
             container.AddCssClass(cssClass);
@@ -19,11 +19,25 @@ namespace ListControl.Extension
             switch (controlType)
             {
                 case ControlType.CheckBox:
-                    IEnumerable<string> currentValues = stateValue as IEnumerable<string>;
-                    result= GenerateCheckBoxList(container, name, items, currentValues,disabled);
+                    
+                      IEnumerable<string> currentValues = stateValue as IEnumerable<string>;
+                      if (currentValues == null)
+                      {
+                          List<String> currentValuesList = new List<String>();
+                          IEnumerable<int> currentValuesInt = stateValue as IEnumerable<int>;
+                          if (currentValuesInt != null)
+                          {
+                              foreach (var item in currentValuesInt)
+                              {
+                                  currentValuesList.Add(item.ToString());
+                              }
+                          }
+                          currentValues = currentValuesList.AsEnumerable<String>();
+                      }
+                     result = GenerateCheckBoxList(container, name, items, currentValues, disabled);
                     break;
                 case ControlType.Radio:
-                    string currentValue = stateValue.ToString();
+                    string currentValue = stateValue==null?null:stateValue.ToString();
                     result= GenerateRadioButtonList(container, name, items, currentValue,disabled);
                     break;
             }
@@ -51,7 +65,7 @@ namespace ListControl.Extension
             foreach (var item in items)
             {
                 string controlId = string.Format("{0}{1}", name, idSuffix);
-                bool currentItemIschecked = item.Value == currentValue;
+                bool currentItemIschecked = currentValue==null?false:item.Value == currentValue;
                 container.InnerHtml += GenerateControl(name, controlId, item.Text, item.Value, currentItemIschecked, "radio", disabled);
                 idSuffix++;
             }
