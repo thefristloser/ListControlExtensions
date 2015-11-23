@@ -16,8 +16,10 @@ Methods
 - Html.CheckBoxListFor<TModel, TProperty>(Expression<Func<TModel, TProperty>> expression, List<SelectListItem> items,  string cssClass = null)
 i.e.
 ====================
- @Html.RadioButtonListFor(model => model.Marriage, (Models.MarriagesEnum.单身).ToSelectListItem((int)Models.MarriagesEnum.单身), cssClass: "nav radio")
-   <script>
+ @Html.RadioButtonListFor(model => model.Marriage, (Models.MarriagesEnum.已婚).ToSelectListItem((int)Models.MarriagesEnum.已婚), cssClass: "nav radio")
+
+   &lt;script&gt;
+   
         $('input:radio').each(function () {
             var self = $(this);
             self.iCheck({
@@ -28,4 +30,5 @@ i.e.
             checkboxClass: 'icheckbox_flat-blue',
         });
 
-    </script>
+    &lt;/script&gt;
+
